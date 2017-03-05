@@ -1,0 +1,3 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">&#x0A;<refactoring comment="Rename resource &apos;pj/src/mySet&apos; to &apos;mySet.h&apos;" description="Rename resource &apos;mySet&apos;" flags="7" id="org.eclipse.ltk.core.refactoring.rename.resource" input="src/mySet" name="mySet.h" stamp="1478745808015" updateReferences="true"/>&#x0A;<refactoring comment="Rename resource &apos;pj/src/pj.cpp&apos; to &apos;mySetMain.cpp&apos;" description="Rename resource &apos;pj.cpp&apos;" flags="7" id="org.eclipse.ltk.core.refactoring.rename.resource" input="src/pj.cpp" name="mySetMain.cpp" stamp="1478749175397" updateReferences="true"/>
+</session>

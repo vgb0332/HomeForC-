@@ -1,0 +1,158 @@
+// SelSort.cpp
+//
+
+#include <iostream>
+#include <cassert>
+#include <cstdlib>
+#include <ctime>
+#include <string>
+
+using namespace std;
+
+#include "List.h"
+
+const int  LINE_MAX = 13;
+const int  SUFFLECOUNT = 30;
+
+int irandom (int low, int high) {
+	float r = rand();
+	float rmax = RAND_MAX;
+	return (int)((r/rmax)*(high - low + 1) + low);
+}
+
+void printList(const List& L)
+{
+	int i = 0;
+	for (Iterator cp = L.begin(); cp!=L.end(); cp++) {
+		cout << *cp << " ";
+		i++;
+		if (i % LINE_MAX == 0) cout << endl;
+	}
+	cout << endl;
+}
+
+Iterator getMin (const List& L, Iterator pos) {
+	Iterator minIter;
+	Card lowValue = Card::getHighValue();
+	for (Iterator cp = pos; cp!=L.end(); cp++) {
+		if (lowValue > *cp){
+			minIter = cp;
+			lowValue = *cp;
+		}
+	}
+	return minIter;
+}
+Iterator getMin (const List& L) {
+	Iterator minIter;
+	Card lowValue = Card::getHighValue();
+	for (Iterator cp = L.begin(); cp!=L.end(); cp++) {
+		if (lowValue > *cp){
+			minIter = cp;
+			lowValue = *cp;
+		}
+	}
+	return minIter;
+}
+void swapNode (List& L, Iterator it1, Iterator it2){
+	if (it1 == L.end() || it2 == L.end())
+		return;
+	if (it1 == it2)
+		return;
+	Card val1 = *it1;
+	Card val2 = *it2;
+	*it1 = val2;
+	*it2 = val1;
+
+	//cout << "  v1=" << val1 << " " << "  v2=" << val2 << endl;
+	//cout << "*it1=" << *it1 << " " << "*it2=" << *it2 << endl;
+}
+Iterator nPos(List& L, int n){
+	Iterator cp;
+	int count = 0;
+	for (cp = L.begin(); cp!=L.end(); cp++) {
+		if (count == n){
+			break;
+		}
+		count ++;
+	}
+	return cp;
+}
+Card removeMin(List& L){
+	Iterator minit = getMin(L);
+	Card res = *minit;
+	L.erase(minit);
+	return res;
+}
+void selSort (List& L) {
+	int lsize = L.size();
+	for (int i=0; i<lsize; ++i){
+		for (int j=i; j<lsize; ++j){
+			Iterator rest = nPos(L, j);
+			Iterator minit = getMin(L, rest);
+			swapNode(L, rest, minit);
+		}
+	}
+}
+void selSortR (List& L) {
+	if (L.size() <= 1)
+		return;
+	Card minVal = removeMin(L);
+	selSortR(L);
+	L.push_front(minVal);
+}
+void sortTestCard(){
+	cout << "Sort Test Card \n";
+	List deck;
+
+	// Make a Card Deck
+	for (int s=CLUB; s<=SPADE; s++)
+		for (int r=ACE; r<=KING; r++){
+			deck.push_back(Card(s,r));
+		}
+	// Display the Deck
+	printList(deck);
+	cout << endl;
+	// List Test
+	List deck2 = deck;
+	printList(deck2);
+	deck = deck2;
+
+	selSort(deck);
+	printList(deck);
+	cout << endl;
+
+	selSortR(deck2);
+	printList(deck2);
+	cout << endl;
+
+}
+void suffle (List& L) {
+
+	srand((int)time(0));
+	int oneOrzero = 0;
+	int lsize = L.size();
+	Iterator iter = L.begin();
+	for (int i=1; i <= SUFFLECOUNT*lsize; i++) {
+		oneOrzero = irandom(0,1);
+		if (oneOrzero == 0) {
+			// move to back
+			L.push_back(iter.get());
+			iter = L.erase(iter);
+		}
+		else {
+			iter.next();
+			if (iter == L.end())
+				iter = L.begin();
+		}
+	}
+}
+
+int main() {
+	sortTestCard();
+	cout << "Cur Node Count=" << Node::getCurCount() << endl;
+	cout << "Max Node Count=" << Node::getMaxCount() << endl;
+	return 0;
+}
+
+
+
